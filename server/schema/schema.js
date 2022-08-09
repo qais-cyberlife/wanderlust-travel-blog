@@ -2,7 +2,11 @@ const Author = require('../models/Author');
 const Post = require('../models/Post');
 
 const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLSchema, GraphQLList, GraphQLNonNull } = require('graphql');
+const User = require('../models/User');
 
+
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const AuthorType = new GraphQLObjectType({
     name: 'Author',
@@ -10,6 +14,16 @@ const AuthorType = new GraphQLObjectType({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         username: { type: GraphQLString }
+    })
+});
+
+const UserType = new GraphQLObjectType({
+    name: 'User',
+    fields: () => ({
+        id: { type: GraphQLID },
+        name: { type: GraphQLString },
+        username: { type: GraphQLString },
+        password: { type: GraphQLString },
     })
 });
 
@@ -25,7 +39,7 @@ const PostType = new GraphQLObjectType({
         },
         title: { type: GraphQLString },
         publishedDate: { type: GraphQLString },
-        description: {type: GraphQLString},
+        description: { type: GraphQLString },
     })
 });
 
@@ -65,7 +79,7 @@ const mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
         addAuthor: {
-            type:AuthorType,
+            type: AuthorType,
             args: {
                 name: { type: GraphQLNonNull(GraphQLString) },
                 username: { type: GraphQLNonNull(GraphQLString) },
@@ -79,6 +93,52 @@ const mutation = new GraphQLObjectType({
                 return author.save();
             },
         },
+
+        // Refrence Line 392 of the Surface Blog 
+        addUser: {
+            type: UserType,
+            args: {
+                name: { type: GraphQLNonNull(GraphQLString) },
+                username: { type: GraphQLNonNull(GraphQLString) },
+                password: { type: GraphQLNonNull(GraphQLString) },
+            },
+            resolve(parent, args) {
+                // TODO: 1. Check if user already exists
+                // TODO: 2. Encrypt the user password using Bycrypt (done)
+                // TODO: 4. Request Mongo DB
+
+                const errorMessage = 'Incorrect Email or Password!'
+
+                //no username found, return error
+                if (!user) {
+                    throw new AuthenticationError(errorMessage);
+                }
+
+                //check plain text password with hashed db password
+                const validPassword =  user.checkPassword(password);
+
+                //passwords do not match, return error
+                if (!validPassword) {
+                    throw new AuthenticationError(errorMessage);
+                }
+
+                //create user token
+                const token = signToken(user);
+
+                const salt = bcrypt.genSaltSync(saltRounds);
+                const encryptedPassword = bcrypt.hashSync(args?.password, salt);
+
+                const user = new User({
+                    name: args.name,
+                    username: args.username,
+                    password: encryptedPassword
+                });
+
+                return user.save();
+            },
+        },
+
+
         addPost: {
             type: PostType,
             args: {
@@ -87,14 +147,14 @@ const mutation = new GraphQLObjectType({
                 publishedDate: { type: GraphQLNonNull(GraphQLString) },
                 authorId: { type: GraphQLNonNull(GraphQLString) },
             },
-            resolve(parent,args) {
+            resolve(parent, args) {
                 const post = new Post({
                     title: args.title,
-                    description: args. description,
+                    description: args.description,
                     publishedDate: args.publishedDate,
                     authorId: args.authorId,
                 });
-    
+
                 return post.save();
             },
         },

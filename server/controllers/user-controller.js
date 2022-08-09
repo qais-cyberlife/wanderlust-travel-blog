@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User } = require('../models/User');
 const { signToken } = require('../utils/auth');
 
 module.exports = {
@@ -16,6 +16,8 @@ module.exports = {
 
     async createUser({ body }, res) {
         const user = await User.create(body);
+
+        console.log("Hello World!!");
 
         if (!user) {
             return res.status(400).json({ message: 'Something is wrong!'});

@@ -2,8 +2,8 @@ import "../styles/register.css";
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useMutation } from "@apollo/client";
-import { ADD_AUTHOR } from "../mutations/authorMutation";
-import { GET_AUTHORS } from '../queries/authorQueries';
+import { GET_USERS } from '../queries/userQueries';
+import { ADD_USER } from "../mutations/userMutation";
 
 
 export default function Register () {
@@ -11,16 +11,16 @@ export default function Register () {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const [addAuthor] = useMutation(ADD_AUTHOR, {
-        variables: { name, username},
-        update(cache, { data: { addAuthor } }) {
+    const [addUser] = useMutation(ADD_USER, {
+        variables: { name, username, password},
+        update(cache, { data: { addUser } }) {
 
             // It's not reading line 17. Here is the error
-            const { authors } = cache.readQuery({ query: GET_AUTHORS });
+            const { users } = cache.readQuery({ query: GET_USERS });
 
             cache.writeQuery({
-                query: GET_AUTHORS,
-                data: { authors: [...authors, addAuthor] },
+                query: GET_USERS,
+                data: { users: [...users, addUser] },
             });
         }
     });
