@@ -8,10 +8,10 @@ const userSchema = new Schema(
             require: true,
             unique: true,
         },
-        email: {
+        name: {
             type: String,
             require: true,
-            unique: true,
+            unique: false,
         },
         password: {
             type: String,

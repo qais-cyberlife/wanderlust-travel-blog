@@ -2,7 +2,7 @@ import "../styles/register.css";
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useMutation } from "@apollo/client";
-import { GET_USERS } from '../queries/userQueries';
+
 import { ADD_USER } from "../mutations/userMutation";
 
 
@@ -11,19 +11,22 @@ export default function Register () {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const [addUser] = useMutation(ADD_USER, {
-        variables: { name, username, password},
-        update(cache, { data: { addUser } }) {
+    // const [addUser] = useMutation(ADD_USER, {
+    //     variables: { name, username, password},
+    //     update(cache, { data: { addUser } }) {
+    //         console.log("addUser");
 
-            // It's not reading line 17. Here is the error
-            const { users } = cache.readQuery({ query: GET_USERS });
+    //         // It's not reading line 17. Here is the error
+    //         const { users } = cache.readQuery({ query: GET_USERS });
 
-            cache.writeQuery({
-                query: GET_USERS,
-                data: { users: [...users, addUser] },
-            });
-        }
-    });
+    //         cache.writeQuery({
+    //             query: GET_USERS,
+    //             data: { users: [...users, addUser] },
+    //         });
+    //     }
+    // });
+
+    const [addUser, {data, loading, error}] = useMutation(ADD_USER);
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -32,12 +35,16 @@ export default function Register () {
             return alert('Please fill in all fields!');
         }
 
-        addAuthor(name, username);
+        // addUser(name, username, password);
+        addUser({variables: {name, username, password}});
 
         setName('');
         setUsername('');
         setPassword('');
+
+        alert('User is created successfully');
     };
+
 
     return (
         <>

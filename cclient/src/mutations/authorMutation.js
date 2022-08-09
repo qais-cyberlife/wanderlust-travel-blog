@@ -5,8 +5,7 @@ const ADD_AUTHOR = gql`
         addAuthor (name: $name, username: $username)
         {
             id
-            name
-            username
+            title
         }
     }
 `

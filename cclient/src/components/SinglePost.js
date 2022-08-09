@@ -1,48 +1,36 @@
 import "../styles/singlePost.css"
 
-export default function SinglePost() {
+import { useQuery } from "@apollo/client";
+import { GET_POST } from "../queries/postQueries";
+
+
+export default function SinglePost({postId}) {
+    console.log("postId", postId);
+
+    const { loading, error, data } = useQuery(GET_POST, {variables: {id: postId}});
+    if (error || !data) return <p>Something went wrong</p>
+    console.log("single ost", data);
+
+    const {id, title, description, publishedDate, author}  = data.post;
+
     return (
         <>
             <div class="singlePost">
                 <div class="singlePostWrapper">
                     <img class="singlePostImg" src="https://www.cityworks.com/wp-content/uploads/2022/05/placeholder.png" alt="Placeholder Image"></img>
                     <h1 class="singlePostTitle">
-                        Title afjijeh fajeifao
+                        {title}
                         <div class="singlePostIcons">
                             <i id="editIcon" class="far fa-edit"></i>
                             <i id="deleteIcon" class="far fa-trash-alt"></i>
                         </div>
                     </h1>
                     <div class="singlePostInfo">
-                        <span class="singlePostAuthor">Author: <b>Swaathy</b></span>
-                        <span class="singlePostDate">Yesterday</span>
+                        <span class="singlePostAuthor">Author: <b>{author?.name}</b></span>
+                        <span class="singlePostDate">{publishedDate.substring(4, 15)}</span>
                     </div>
                     <p class="singlePostDesc">
-                    Lorem ipsum dolor sit amet. Ut esse rerum aut obcaecati eligendi sed dicta voluptatum qui quod libero vel enim illo id sapiente perspiciatis est vitae 
-                    tenetur? Aut dolores illo sed voluptatem ipsum et provident consectetur non ratione commodi quo sapiente libero a tenetur asperiores. Ut totam eligendi 
-                    et tenetur Quis est voluptate harum ut veritatLorem ipsum dolor sit amet. Ut esse rerum aut obcaecati eligendi sed dicta voluptatum qui quod libero vel 
-                    enim illo id sapiente perspiciatis est vitae tenetur? Aut dolores illo sed voluptatem ipsum et provident consectetur non ratione commodi quo sapiente 
-                    libero a tenetur asperiores. Ut totam eligendi et tenetur Quis est voluptate harum ut veritatLorem ipsum dolor sit amet. Ut esse rerum aut obcaecati 
-                    eligendi sed dicta voluptatum qui quod libero vel enim illo id sapiente perspiciatis est vitae tenetur? Aut dolores illo sed voluptatem ipsum et provident 
-                    consectetur non ratione commodi quo sapiente libero a tenetur asperiores. Ut totam eligendi et tenetur Quis est voluptate harum ut veritaLorem ipsum dolor 
-                    sit amet. Ut esse rerum aut obcaecati eligendi sed dicta voluptatum qui quod libero vel enim illo id sapiente perspiciatis est vitae tenetur? Aut dolores 
-                    illo sed voluptatem ipsum et provident consectetur non ratione commodi quo sapiente libero a tenetur asperiores. Ut totam eligendi et tenetur Quis est 
-                    voluptate harum ut veritatLorem ipsum dolor sit amet. Ut esse rerum aut obcaecati eligendi sed dicta voluptatum qui quod libero vel enim illo id sapiente 
-                    perspiciatis est vitae tenetur? Aut dolores illo sed voluptatem ipsum et provident consectetur non ratione commodi quo sapiente libero a tenetur asperiores. 
-                    Ut totam eligendi et tenetur Quis est voluptate harum ut veritat Lorem ipsum dolor sit amet. Ut esse rerum aut obcaecati eligendi sed dicta voluptatum qui 
-                    quod libero vel enim illo id sapiente perspiciatis est vitae tenetur? Aut dolores illo sed voluptatem ipsum et provident consectetur non ratione commodi quo 
-                    sapiente libero a tenetur asperiores. Ut totam eligendi et tenetur Quis est voluptate harum ut veritatLorem ipsum dolor sit amet. Ut esse rerum aut obcaecati 
-                    eligendi sed dicta voluptatum qui quod libero vel enim illo id sapiente perspiciatis est vitae tenetur? Aut dolores illo sed voluptatem ipsum et provident 
-                    consectetur non ratione commodi quo sapiente libero a tenetur asperiores. Ut totam eligendi et tenetur Quis est voluptate harum ut veritatLorem ipsum dolor 
-                    sit amet. Ut esse rerum aut obcaecati eligendi sed dicta voluptatum qui quod libero vel enim illo id sapiente perspiciatis est vitae tenetur? Aut dolores 
-                    illo sed voluptatem ipsum et provident consectetur non ratione commodi quo sapiente libero a tenetur asperiores. Ut totam eligendi et tenetur Quis est volup
-                    tate harum ut veritatLorem ipsum dolor sit amet. Ut esse rerum aut obcaecati eligendi sed dicta voluptatum qui quod libero vel enim illo id sapiente perspi
-                    ciatis est vitae tenetur? Aut dolores illo sed voluptatem ipsum et provident consectetur non ratione commodi quo sapiente libero a tenetur asperiores. 
-                    Ut totam eligendi et tenetur Quis est voluptate harum ut veritatLorem ipsum dolor sit amet. Ut esse rerum aut obcaecati eligendi sed dicta voluptatum qui 
-                    quod libero vel enim illo id sapiente perspiciatis est vitae tenetur? Aut dolores illo sed voluptatem ipsum et provident consectetur non ratione commodi 
-                    quo sapiente libero a tenetur asperiores. Ut totam eligendi et tenetur Quis est voluptate harum ut veritat Lorem ipsum dolor sit amet. Ut esse rerum aut 
-                    obcaecati eligendi sed dicta voluptatum qui quod libero vel enim illo id sapiente perspiciatis est vitae tenetur? Aut dolores illo sed voluptatem ipsum 
-                    et provident consectetur non ratione commodi quo sapiente libero a tenetur asperiores. Ut totam eligendi et tenetur Quis est voluptate harum ut veritat
+                    {description}
                     </p>
                 </div>
             </div>
