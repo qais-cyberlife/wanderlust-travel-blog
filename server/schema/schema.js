@@ -145,6 +145,8 @@ const mutation = new GraphQLObjectType({
                 // return user;
             },
         },
+
+
         login: {
             type: UserType,
             args: {
@@ -165,8 +167,6 @@ const mutation = new GraphQLObjectType({
                         user = null;
                     }
                 }
-
-                // zoo has 40mins limit, let me sen send new zoom link
 
                 return user;
             }

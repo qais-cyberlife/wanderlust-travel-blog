@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, Navigate } from "react-router-dom"
 import { useState } from 'react';
 import { useMutation } from "@apollo/client";
 import { LOGIN_USER } from '../mutations/userMutation';
@@ -21,22 +21,24 @@ export default function Login () {
         }
 
         // addUser(name, username, password);
-        const data = await login({variables: {username, password}});
+        const {data} = await login({variables: {username, password}});
         console.log("login result", data);
 
-        if( data.data.login == null ) {
+        if(data.login == null ) {
             alert("Login failed");
             return;
         }
+
+        console.log(data)
 
         setUsername('');
         setPassword('');
 
         // save it on local storage
-        localStorage.setItem("login", JSON.stringify(data.data.login));
+        localStorage.setItem("login", JSON.stringify(data.login));
 
-        alert('Login successfully');
-        navigate('/');
+        // alert('Login successfully');
+        window.location.assign("/");
     };
     return (
         <>
