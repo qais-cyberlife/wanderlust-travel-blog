@@ -1,9 +1,7 @@
 import "../styles/write.css" 
 import {useState, useEffect}  from "react";
-import { useMutation } from "@apollo/client";
+import {useMutation} from "@apollo/client";
 import {useNavigate} from 'react-router-dom';
-
-
 import { ADD_POST } from "../mutations/postMutation";
 
 export default function Write(){
@@ -69,18 +67,28 @@ export default function Write(){
         <>
             <div class="write">
                 <img class="writeImg" src="https://www.cityworks.com/wp-content/uploads/2022/05/placeholder.png" alt="Placeholder Image"></img>
+  
                 <form class="writeForm" onSubmit={onSubmit} >
+  
                     <div class="writeFormGroup">
+
                         <label htmlFor="fileInput">
                             <i class="writeIcon fas fa-plus"></i>
                         </label>
+  
                         <input type="file" id="fileInput" disabled={isDisabled}></input>
                         <input class="writeInput" type="text" placeholder="Title" autoFocus={true} disabled={isDisabled} value={title}  onChange={(e) => setTitle(e.target.value)} ></input>
+  
                     </div>
+  
                     <div class="writeFormGroup">
+  
                         <textarea class="writeInput writeText" placeholder="Share your journey..." type="text" disabled={isDisabled} value={text} onChange={(e) => setText(e.target.value)} ></textarea>
+  
                     </div>
+  
                     <button class="writeButton" disabled={isDisabled} >Publish</button>
+  
                 </form>
             </div>
         </>

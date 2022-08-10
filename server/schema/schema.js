@@ -95,7 +95,6 @@ const mutation = new GraphQLObjectType({
             },
         },
 
-        // Refrence Line 392 of the Surface Blog 
         addUser: {
             type: UserType,
             args: {
@@ -110,7 +109,7 @@ const mutation = new GraphQLObjectType({
                 console.log("addUser", args);
 
                 const errorMessage = 'Incorrect Email or Password!'
-                const {name, username, password} = args;
+                const { name, username, password } = args;
 
                 //no username found, return error
                 if (!name) {
@@ -126,8 +125,8 @@ const mutation = new GraphQLObjectType({
                 }
 
                 // const salt = bcrypt.genSaltSync(saltRounds);
-                
-              
+
+
                 const user = new User({
                     name: name,
                     username: username,
@@ -140,7 +139,7 @@ const mutation = new GraphQLObjectType({
 
                 // console.log("addUser3333", user);
 
-                
+
 
                 // return user;
             },
@@ -156,14 +155,14 @@ const mutation = new GraphQLObjectType({
             async resolve(parent, args) {
                 console.log("login", args);
 
-                const {username, password} = args;
-                let user = await User.findOne({username: username});
-                if( user) {
+                const { username, password } = args;
+                let user = await User.findOne({ username: username });
+                if (user) {
                     console.log(password, user.password);
                     const flag = bcrypt.compareSync(password, user.password);
                     console.log("flag", flag);
 
-                    if( !flag ) {
+                    if (!flag) {
                         user = null;
                     }
                 }
@@ -180,6 +179,7 @@ const mutation = new GraphQLObjectType({
                 publishedDate: { type: GraphQLNonNull(GraphQLString) },
                 authorId: { type: GraphQLNonNull(GraphQLString) },
             },
+            
             async resolve(parent, args) {
                 console.log("addPost", args);
                 const post = new Post({
@@ -189,18 +189,10 @@ const mutation = new GraphQLObjectType({
                     authorId: args.authorId,
                 });
 
-                return await post.save();                
+                return await post.save();
             },
         },
-        deletePost: {
-            type: PostType,
-            args: {
-                id: { type: GraphQLNonNull(GraphQLID) },
-            },
-            resolve(parent, args) {
-                return Post.findByIdAndRemove(args.id);
-            }
-        },
+
         updatePost: {
             type: PostType,
             args: {
@@ -209,6 +201,17 @@ const mutation = new GraphQLObjectType({
                 description: { type: GraphQLNonNull(GraphQLString) },
                 publishedDate: { type: GraphQLNonNull(GraphQLString) },
             },
+
+            deletePost: {
+                type: PostType,
+                args: {
+                    id: { type: GraphQLNonNull(GraphQLID) },
+                },
+                resolve(parent, args) {
+                    return Post.findByIdAndRemove(args.id);
+                }
+            },
+
             resolve(parent, args) {
                 return Post.findByIdAndUpdate(
                     args.id,
